@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<script>
+    $('#newUser').click(function () {
+    $('#signup').slideDown(500);
+    $('#login').slideUp(500);
+});
+$('#forgotPassword').click(function () {
+    $('#login').slideUp(500);
+    $('#forgot').slideDown(500);
+});
+$('#existingUser').click(function () {
+    $('#signup').slideUp(500);
+    $('#login').slideDown(500);
+});
+$('#back-to-login').click(function () {
+    $('#forgot').slideUp(500);
+    $('#login').slideDown(500);
+});
+
+// Creating a user for test
+
+let Email = $('#emailAddress');
+Email = 'prateek@gmail.com';
+
+let password = $('#password');
+password = '12345678';
+
+// Checking Login Detail
+
+//function loginDetail() {
+//    if ($('#emailAddress').val() == emailAddress && $('#password').val() == password) {
+//        window.location.href = '/Todo/TodoList';
+//    } else {
+//        $('#denied-login').removeClass('hidden');
+//    }
+//}
+
+//$('#logInBtn').on('click', loginDetail);
+
+//for login function
+$("#logInBtn").on('click',function (e) {
+    //To prevent form submit after ajax call
+    e.preventDefault();
+    var data = { "Email": $("#Email").val(), "Password": $("#Password").val() }
+    if ($('#email').val() == email && $('#password').val() == password) {
+        window.location.href = '/Todo/TodoList';
+        //Set data to be sent
+        
+        $.ajax({
+            url: "/Identity/Pages/Account/Login",
+            type: "POST",
+
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json",
+            success: function (status) {
+                if (status != "InvalidData") {
+                    $("#span1").css("display", "block");
+                    $("#span1").css("color", "green");
+                    $("#span1").html("Valid User name and password");
+                }
+                else {
+                    $("#span1").css("display", "block");
+                    $("#span1").css("color", "red");
+                    $("#span1").html("Invalid User name or password");
+                }
+            },
+            error: function () {
+            }
+        })
+    }
+    else {
+        $('#denied-login').removeClass('hidden');
+    }
+});
+
+
+//for signup function
+$("#signUpbtn").on('click',function (e) {
+    //To prevent form submit after ajax call
+    e.preventDefault();
+    //Set data to be sent
+    var data = { "Email": $("#Email").val(), "Password": $("#Password").val(), "ConfirmPassword": $("#ConfirmPassword") }
+    $.ajax({
+        url: "/Identity/Pages/Account/Register",
+        type: "POST",
+
+        data: JSON.stringify(data),
+        dataType: "json",
+        contentType: "application/json",
+        success: function (status) {
+            if (status != "InvalidData") {
+                $("#span1").css("display", "block");
+                $("#span1").css("color", "green");
+                $("#span1").html("Valid User name and password");
+            }
+            else {
+                $("#span1").css("display", "block");
+                $("#span1").css("color", "red");
+                $("#span1").html("Invalid User name or password");
+            }
+        },
+        error: function () {
+        }
+    })
+});
+
+$("#forgotPassword")
+</script>
+</head>
+<body>
+    <div class="main">
+        <div class="todo-wrapper">
+            <div class="top-container">
+                <h1 class="title">Welcome Back</h1>
+                <div class="form">
+                    <div class="tab-container">
+                        <p> 2do let you organize and prioritize works.</p>
+                        <div id="login">
+                            <div class="col-md-4">
+                                <div asp-controller="Account" asp-action="Login" method="post">
+                                    <table class="table table-responsive table-striped">
+                                        <tr><td>User Name</td><td><input class="form-control" type="text" id="Email" required /></td></tr>
+                                        <tr><td>Password</td><td><input class="form-control" type="text" id="Password" required /></td></tr>
+                                        <tr><td colspan="2"><input class="btn btn-primary" type="submit" name="btn" id="btn1" value="SignIn" /><span id="span1" style="display:none"></span></td></tr>
+                                    </table>
+                                    <div class="forgotPassword" method="Post">
+                                        <p class="form-group">
+                                            <a id="forgotPassword" class="link" href="#">Forgot Password?</a>
+                                        </p>
+                                    </div>
+
+                                    <div class="denied-login-wrap" method="post">
+                                        <p id="denied-login" class="hidden">Enter correct email and password combination</p>
+                                    </div>
+                                    <button type="submit" id="logInBtn" class="button button-block">LOG IN</button>
+                                    <!--<button><a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a></button></p>-->
+                                    @*<p><a class="nav-link" asp-area="Identity" asp-page="/Account/Register">New User? SignUp</a></p>*@
+                                    <p class="new-user"><a id="newUser" class="link" href="#">New User? Sign Up</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="signup" class="hidden">
+                            <h1 class="title">Sign Up for Free</h1>
+                            <div asp-controller="Account" asp-action="Register" method="post">
+                                <div class="input-wrap email">
+                                    <table class="table table-responsive table-striped">
+                                        <tr><td>User Name</td><td><input class="form-control" type="text" id="Email" required /></td></tr>
+                                        <tr><td>Password</td><td><input class="form-control" type="text" id="Password" required /></td></tr>
+                                        <tr><td>ConfirmPassword</td><td><input class="form-control" type="text" id="confirmPassword" required /></td></tr>
+                                        <tr><td colspan="2"><input class="btn btn-primary" type="submit" name="btn" id="SignUpBtn" value="SignIn" /><span id="span1" style="display:none"></span></td></tr>
+                                    </table>
+                                </div>
+
+                                <button type="submit" class="button button-block">GET STARTED</button>
+                                <p class="existing-user">
+                                    <a id="existingUser" class="link" href="#">Existing User? Login</a>
+
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="forgot" class="hidden">
+                            <h1 class="title">Forgot Password</h1>
+                            <div method="post">
+                                <div>
+                                    <input type="text" class="form-input" name="email" placeholder="Enter your email.">
+                                </div>
+                                <button type="submit" class="button button-block">RESET PASSWORD</button>
+
+                                <p class="back-to-login"><a id="back-to-login" href="#">Back to login</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div>
+        <form role="form">
+            <table class="table table-responsive table-striped">
+                <tr><td>User Name</td><td><input class="form-control" type="text" id="Email" required /></td></tr>
+                <tr><td>Password</td><td><input class="form-control" type="text" id="Password" required /></td></tr>
+                <tr><td colspan="2"><input class="btn btn-primary" type="submit" name="btn" id="btn1" value="SignIn" /><span id="span1" style="display:none"></span></td></tr>
+
+            </table>
+            <div id="div1" style="display:none">
+
+                <img src="../images/ajax_linq_MVC.png" />
+            </div>
+            <div id="msg">
+
+
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
